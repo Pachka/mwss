@@ -1,0 +1,34 @@
+Package: mwss
+Type: Package
+Title: Stochastic simulations of infectious disease spread in healthcare systems structured as a networked metapopulation
+Version: 0.2.0
+Date: 2022-05-03
+Authors@R: c( person("Pachka", "Hammami",
+                    email="pachka@hotmail.fr",
+	            role=c("aut", "cre")),
+	            person("Ajmal", "Oodally",
+                    email="ajmaloodally@hotmail.com",
+	            role=c("aut")),
+	            person("Stefan", "Widgren",
+                    email="stefan.widgren@sva.se",
+	            role="ctb"),
+	            person("Laura", "Temine",
+                    email="laura.temime@lecnam.net",
+	            role=c("aut")),
+	            person("Lulla", "Opatowski",
+                    email="lulla.opatowski@pasteur.fr",
+	            role=c("aut")))
+Description:
+    MWSS allows building and parametrising complex compartmental models of pathogen spread in structured metapopulations. Run and analyse stochastic simulations of pathogen introduction, spread and persistence within patient and professional populations of structured healthcare systems. Test control and surveillance measures and generates key outputs useful for disease management.  Accounting for pathogen and host epidemiological characteristics, and hospitals' and wards' organizational specificities, the networked modeling approach was conceived to be adaptable to a large panel of healthcare institutions such as hospitals, clinics and nursing homes. 
+License: GPL-3
+URL: https://github.com/ajmalo/mwss
+BugReports: https://github.com/ajmalo/mwss/issues
+Depends: R (>= 3.5.0)
+Imports: SimInf, ggplot2, magrittr, data.table, purrr, Hmisc, igraph, reshape2, scales, intergraph, network
+Suggests: testthat, knitr, rmarkdown
+VignetteBuilder:
+    knitr
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+RoxygenNote: 7.1.2
