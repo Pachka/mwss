@@ -1,7 +1,7 @@
 ## mwss: an R package for stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 <font size="-2">
-   Hammami Pachka<sup>1,2,3,*</sup>, Oodally Ajmal<sup>1,2,3,*</sup>, Reilhac Astrid<sup>4</sup>, Guérineau de Lamérie Guillaume<sup>4</sup>,  Widgren Stefan <sup>5</sup>,  Temime Laura<sup>3,6,¤</sup> and  Opatwoski Lulla<sup>1,2,¤</sup></font>
+   Hammami Pachka<sup>1,2,3,*</sup>, Oodally Ajmal<sup>1,2,3,*</sup>, Reilhac Astrid<sup>4</sup>, Guérineau de Lamérie Guillaume<sup>4</sup>,  Widgren Stefan <sup>5</sup>,  Temime Laura<sup>3,6,¤</sup> and  Opatowski Lulla<sup>1,2,¤</sup></font>
 
 <br>
 <sup>1</sup> Anti-infective evasion and pharmacoepidemiology team, Université Paris-Saclay, UVSQ, Inserm, CESP,  Montigny-Le-Bretonneux, France
