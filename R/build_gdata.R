@@ -94,6 +94,11 @@
 #' @param rinfHI a positive ratio, the average infection-reducing ratio for individuals with high immunity compared to non immune (can be interpreted as high immunity efficiency)
 #' @param rsymp a ratio, the average ratio increasing or reducing the probability to develop symptoms for patients compared to general population (professionals)
 #' @param rsev a ratio, the average ratio increasing or reducing the probability to develop severe symptoms for symptomatic patients compared to general population (professionals)
+#' @param rEA a ratio, the ratio of excretion for individuals in epidemiological stage EA (exposed - contagious pre-asymptomatic)
+#' @param rES a ratio, the ratio of excretion for individuals in epidemiological stage ES (exposed - contagious pre-symptomatic)
+#' @param rIA a ratio, the ratio of excretion for individuals in epidemiological stage IA (infectious asymptomatic)
+#' @param rIM a ratio, the ratio of excretion for individuals in epidemiological stage IM (infectious with mild symptoms)
+#' @param rIS a ratio, the ratio of excretion for individuals in epidemiological stage IS (infectious with severe symptoms)
 #' @param ptestPSAsymp a positive probability, the probability to test symptomatic patients in the screening area
 #' @param ptestPSANI a positive probability, the probability to test non immune patients in the screening area
 #' @param ptestPSALI a positive probability, the probability to test patients with low immunity in the screening area
@@ -243,6 +248,18 @@ build_gdata <- function(##### Infection
   # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
   rsev = 1,
   # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
+
+  rEA = 0.35,
+  # Ratio  of excretion for individuals in epidemiological stage EA (exposed - contagious pre-asymptomatic)
+  rES = 1,
+  # Ratio of excretion for individuals in epidemiological stage ES (exposed - contagious pre-symptomatic)
+  rIA = 0.35,
+  # Ratio of excretion for individuals in epidemiological stage IA (infectious asymptomatic)
+  rIM = 1,
+  # Ratio of excretion for individuals in epidemiological stage IM (infectious with mild symptoms)
+  rIS = 1,
+  # Ratio of excretion for individuals in epidemiological stage IS (infectious with severe symptoms)
+
 
   ptestPSAsymp = 1,
   # probability to test symptomatic patients in the screening area
@@ -610,6 +627,17 @@ build_gdata <- function(##### Infection
     rinfHI = rinfHI,
     # partial immunity efficiency % FIX ME better explain that this is the ratio of reduction of probability to be infected compared to non immune
 
+    rEA = rEA,
+    # Ratio  of excretion for individuals in epidemiological stage EA (exposed - contagious pre-asymptomatic)
+    rES = rES,
+    # Ratio of excretion for individuals in epidemiological stage ES (exposed - contagious pre-symptomatic)
+    rIA = rIA,
+    # Ratio of excretion for individuals in epidemiological stage IA (infectious asymptomatic)
+    rIM = rIM,
+    # Ratio of excretion for individuals in epidemiological stage IM (infectious with mild symptoms)
+    rIS = rIS,
+    # Ratio of excretion for individuals in epidemiological stage IS (infectious with severe symptoms)
+
     # probability of symptoms for patients compared to general population (professionals)
     psympPNI = psympPNI,
     psevPNI = psevPNI,
@@ -666,17 +694,17 @@ build_gdata <- function(##### Infection
              with(
                data.frame(gdata %>% t),
                c(
-                 rE = tE / cumd,
+                 rtE = tE / cumd,
                  # time ratio of the epidemiological state E over the whole infectious period (probability to be E at the admission when non susceptible)
-                 rEA = (1 - psympNI) * (tEA / cumd),
+                 rtEA = (1 - psympNI) * (tEA / cumd),
                  # time ratio of the epidemiological state EA over the whole infectious period (probability to be EA at the admission when non susceptible)
-                 rES = psympNI * (tES / cumd),
+                 rtES = psympNI * (tES / cumd),
                  # time ratio of the epidemiological state ES over the whole infectious period (probability to be ES at the admission when non susceptible)
-                 rIA = (1 - psympNI) * (tIA / cumd),
+                 rtIA = (1 - psympNI) * (tIA / cumd),
                  # time ratio of the epidemiological state IA over the whole infectious period (probability to be IA at the admission when non susceptible)
-                 rIM = psympNI * (1 - psevNI) * (tIM / cumd),
+                 rtIM = psympNI * (1 - psevNI) * (tIM / cumd),
                  # time ratio of the epidemiological state IM over the whole infectious period (probability to be IM at the admission when non susceptible)
-                 rIS = psympNI * psevNI * (tIS / cumd) # time ratio of the epidemiological state IS over the whole infectious period (probability to be IS at the admission when non susceptible)
+                 rtIS = psympNI * psevNI * (tIS / cumd) # time ratio of the epidemiological state IS over the whole infectious period (probability to be IS at the admission when non susceptible)
                )
              ))
 

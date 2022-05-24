@@ -15,8 +15,13 @@ build_v0 <- function(u0, SA){
   if(isTRUE(SA))
     cols <- c("wpropInfHorig", "wpropInfHdest", "wpropInfPSAdest", "wpropInfPWdest",
               # admission counter per ward
-              rbind(paste0("nadm", seq(nrow(u0))),
-                    paste0("nadmInf", seq(nrow(u0))))) else
+              rbind(paste0("adm_", seq(nrow(u0))),
+                    paste0("admE_", seq(nrow(u0))),
+                    paste0("admEA_", seq(nrow(u0))),
+                    paste0("admES_", seq(nrow(u0))),
+                    paste0("admIA_", seq(nrow(u0))),
+                    paste0("admIM_", seq(nrow(u0))),
+                    paste0("admIS_", seq(nrow(u0))))) else
                       cols <- c("wpropInfHorig", "wpropInfHdest", "wpropInfPWdest")
 
     v0 <- matrix(data = 0,

@@ -64,18 +64,18 @@ keyoutput <- function(trajmwss,
     # total number of admission per simulation
     if (scale == 0)
       nadm <- lapply(trajmwss, function(sim) {
-        sim[time == max(time), sum(nadm)]
+        sim[time == max(time), sum(adm)]
       }) %>% unlist
 
     if (scale == 1) {
       nadm <- lapply(trajmwss, function(sim) {
-        sim[time == max(time), c("node", "nadm")]
+        sim[time == max(time), c("node", "adm")]
       }) %>% do.call(rbind, .)
       nadm[, iteration := iterations]
     }
 
     admInf <- lapply(trajmwss, function(sim) {
-      sim[time == max(time), c("node", "admInf")]
+      sim[time == max(time), c("node", "admE", "admEA", "admES", "admIA", "admIM", "admIS")]
     })
 
     # total number of patient nosocomial infection
@@ -106,7 +106,7 @@ keyoutput <- function(trajmwss,
         sim[, sum(infP)]) %>% unlist
       admInf <-
         lapply(admInf, function(sim)
-          sim[, sum(admInf)]) %>% unlist
+          sim[, sum(admE + admEA + admES + admIA + admIM + admIS)]) %>% unlist
       n_nosoH <-
         lapply(n_nosoH, function(sim)
           sim[, sum(infH)]) %>% unlist
@@ -169,6 +169,8 @@ keyoutput <- function(trajmwss,
       admInf %<>% do.call(rbind, .) %>% .[, iteration := iterations]
       n_nosoH %<>% do.call(rbind, .) %>% .[, iteration := iterations]
       n_outH %<>% do.call(rbind, .) %>% .[, iteration := iterations]
+
+      admInf[, admInf := admE + admEA + admES + admIA + admIM + admIS]
 
       n_nosoP[, infH := n_nosoH$infH]
       p_outbreak <-

@@ -3,15 +3,16 @@
 #' @description Internal function used by \code{mwss} function to write the pts_fun code driving SimInf package to implement ward connections through professionals activities.
 #'  During simulation weighted proportion of infected in specific subpopulations will be calculated and stored in v0 at the end of each time step.
 #'
-#' @usage build_pts_fun(u0, SA, pISO, v0)
+#' @usage build_pts_fun(u0, SA, v0, gdata)
 #'
 #' @return String containing C code used as pts_fun by SimInf package
 #'
 #' @keywords internal
 #' @noRd
 
-build_pts_fun <- function(u0, SA, pISO, v0){
+build_pts_fun <- function(u0, SA, v0, gdata){
 
+  pISO <- gdata[["pISO"]]
   nwards <- nrow(u0)
   nCpmt <- ncol(u0)
   nvvar <- ncol(v0)
@@ -21,26 +22,77 @@ build_pts_fun <- function(u0, SA, pISO, v0){
     # daily number of infectious individuals admitted  =
     # total number of infectious individuals admitted since the beginning of the simulation
     # minus the count of the previous day
-  infMPSA = paste0("u_0[",which(colnames(u0) == "admInf")-1, "+i*nCpmt] - v[", grep('nadmInf',colnames(v0)) %>% min %>% subtract(1),"+i*2]")
-  totMPSA = paste0("u_0[",which(colnames(u0) == "nadm")-1, "+i*nCpmt] - v[", which(grepl('nadm',colnames(v0)) & !grepl('nadmInf',colnames(v0))) %>% min %>% subtract(1),"+i*2]")
+    infMPSA =
+      paste0(
+        "rEA * (", paste0("u_0[",which(colnames(u0) == "admEA")-1, "+i*nCpmt] - v[", grep('admEA_',colnames(v0)) %>% min %>% subtract(1),"+i*7]"), ") + ",
+        "rES * (", paste0("u_0[",which(colnames(u0) == "admES")-1, "+i*nCpmt] - v[", grep('admES_',colnames(v0)) %>% min %>% subtract(1),"+i*7]"), ") + ",
+        "rIA * (", paste0("u_0[",which(colnames(u0) == "admIA")-1, "+i*nCpmt] - v[", grep('admIA_',colnames(v0)) %>% min %>% subtract(1),"+i*7]"), ") + ",
+        "rIM * (", paste0("u_0[",which(colnames(u0) == "admIM")-1, "+i*nCpmt] - v[", grep('admIM_',colnames(v0)) %>% min %>% subtract(1),"+i*7]"), ") + ",
+        "rIS * (", paste0("u_0[",which(colnames(u0) == "admIS")-1, "+i*nCpmt] - v[", grep('admIS_',colnames(v0)) %>% min %>% subtract(1),"+i*7]"), ")"
+      )
+    totMPSA = paste0("u_0[",which(colnames(u0) == "adm")-1, "+i*nCpmt] - v[", which(startsWith(colnames(v0), 'adm_')) %>% min %>% subtract(1),"+i*7]")
   }
 
   # infected patients contributing to spread
   if(isTRUE(pISO)){
-  infMWp  = paste0("u_0[",which(
-    grepl("PW_", colnames(u0)) &
-      !grepl("_S_", colnames(u0)) & !grepl("_E_", colnames(u0)) &
-      ! endsWith(colnames(u0), "_T")
-  ) %>% subtract(1), "+i*nCpmt]", collapse = "+")
+    infMWp  =
+      paste(
+        paste0("rEA * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_EA_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
+        paste0("rES * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_ES_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        paste0("rIA * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IA_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        paste0("rIM * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IM_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        paste0("rIS * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IS_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + ")
+      )
   } else {
-    infMWp  = paste0("u_0[", which(
-      grepl("PW_", colnames(u0)) &
-        !grepl("_S_", colnames(u0)) & !grepl("_E_", colnames(u0))
-    ) %>% subtract(1), "+i*nCpmt]", collapse = "+")
+    infMWp  =
+      paste(
+        paste0("rEA * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_EA_", colnames(u0))
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
+        paste0("rES * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_ES_", colnames(u0))
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
+        paste0("rIA * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IA_", colnames(u0))
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
+        paste0("rIM * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IM_", colnames(u0))
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
+        paste0("rIS * u_0[",which(
+          grepl("PW_", colnames(u0)) & grepl("_IS_", colnames(u0))
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + ")
+      )
   }
 
   # infected healthcare workers contributing to spread
-  infMWh  = paste0("u_0[",which(grepl("H_", colnames(u0)) & !grepl("_S_", colnames(u0)) & !grepl("_E_", colnames(u0))) %>% subtract(1), "+i*nCpmt]", collapse = "+")
+  infMWh  =
+    paste0(
+      "rEA * (", paste0("u_0[",which(
+        grepl("H_", colnames(u0)) & grepl("_EA_", colnames(u0))
+      ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), ") + ",
+      "rES * (", paste0("u_0[",which(
+        grepl("H_", colnames(u0)) & grepl("_ES_", colnames(u0))
+      ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), ") + ",
+      "rIA * (", paste0("u_0[",which(
+        grepl("H_", colnames(u0)) & grepl("_IA_", colnames(u0))
+      ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), ") + ",
+      "rIM * (", paste0("u_0[",which(
+        grepl("H_", colnames(u0)) & grepl("_IM_", colnames(u0))
+      ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), ") + ",
+      "rIS * (", paste0("u_0[",which(
+        grepl("H_", colnames(u0)) & grepl("_IS_", colnames(u0))
+      ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), ")"
+    )
 
   # Total number of non isolated patients
   if(isTRUE(pISO)){
@@ -58,6 +110,11 @@ pts_fun <- paste0("
 const int nW = (int) ",nwards, "L;
 const int nCpmt = (int)",nCpmt, "L;
 const int nvvar = (int)",nvvar, "L;
+const int rEA = (int)",gdata[["rEA"]], "L;
+const int rES = (int)",gdata[["rES"]], "L;
+const int rIA = (int)",gdata[["rIA"]], "L;
+const int rIM = (int)",gdata[["rIM"]], "L;
+const int rIS = (int)",gdata[["rIS"]], "L;
 const int npropinf = (int) 3L;
 unsigned int i = 0;
 double infMPSA, infMWp, infMWh, totMPSA, totMWp, totMWh, wpropInfHorig, wpropInfHdest, wpropInfPSAdest, wpropInfPWdest = 0.00;
@@ -67,13 +124,13 @@ const int * u_0 = &u[-node*nCpmt];
 // for loop terminates after screening all wards
 for(i = 0; i < nW ; i++){
 // count ind in ward i
-  infMPSA = ",infMPSA,";
-  infMWp  = ",infMWp,";
-  infMWh  = ",infMWh,";
+  infMPSA = (",infMPSA,");
+  infMWp  = (",infMWp,");
+  infMWh  = (",infMWh,");
 
-  totMPSA  = ",totMPSA,";
-  totMWp  = ",totMWp,";
-  totMWh  = ",totMWh,";
+  totMPSA  = (",totMPSA,");
+  totMWp  = (",totMWp,");
+  totMWh  = (",totMWh,");
 
 // if at least 1 patient in screening area
   if(totMPSA > 0 ){
@@ -112,8 +169,13 @@ if(totMWp > 0 ){
   v_new[3] = wpropInfPWdest;
 
   for(i = 0; i < nW; ++i){
-  v_new[4 + i*2] = u_0[",which(colnames(u0) == "nadm")-1,"+ i*nCpmt];
-  v_new[5 + i*2] = u_0[",which(colnames(u0) == "admInf")-1,"+ i*nCpmt];
+  v_new[4 + i*7] = u_0[",which(colnames(u0) == "adm")-1,"+ i*nCpmt];
+  v_new[5 + i*7] = u_0[",which(colnames(u0) == "admE")-1,"+ i*nCpmt];
+  v_new[6 + i*7] = u_0[",which(colnames(u0) == "admEA")-1,"+ i*nCpmt];
+  v_new[7 + i*7] = u_0[",which(colnames(u0) == "admES")-1,"+ i*nCpmt];
+  v_new[8 + i*7] = u_0[",which(colnames(u0) == "admIA")-1,"+ i*nCpmt];
+  v_new[9 + i*7] = u_0[",which(colnames(u0) == "admIM")-1,"+ i*nCpmt];
+  v_new[10 + i*7] = u_0[",which(colnames(u0) == "admIS")-1,"+ i*nCpmt];
   }
 
 return 1;
@@ -121,6 +183,11 @@ return 1;
   pts_fun <- paste0("
 const int nW = (int) ", nwards, "L;
 const int nCpmt = (int)", nCpmt, "L;
+const int rEA = (int)",gdata[["rEA"]], "L;
+const int rES = (int)",gdata[["rES"]], "L;
+const int rIA = (int)",gdata[["rIA"]], "L;
+const int rIM = (int)",gdata[["rIM"]], "L;
+const int rIS = (int)",gdata[["rIS"]], "L;
 const int npropinf = (int) 2L;
 unsigned int i = 0;
 double infMWp, infMWh, totMWp, totMWh, wpropInfHorig, wpropInfHdest, wpropInfPWdest = 0.00;
@@ -134,11 +201,11 @@ const int * u_0 = &u[-node*nCpmt];
 for(i = 0; i < nW ; i++){
 
 // count ind in ward i
-  infMWp  = ",infMWp,";
-  infMWh  = ",infMWh,";
+  infMWp  = (",infMWp,");
+  infMWh  = (",infMWh,");
 
-  totMWp  = ",totMWp,";
-  totMWh  = ",totMWh,";
+  totMWp  = (",totMWp,");
+  totMWh  = (",totMWh,");
 
 // if at least 1 patient in ward
 if(totMWp > 0 ){

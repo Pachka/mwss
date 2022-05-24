@@ -130,6 +130,12 @@ gdata <- build_gdata(
   rsymp = 1, # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
   rsev = 1, # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
 
+  rEA = 0.35, # Ratio  of excretion for individuals in epidemiological stage EA (exposed - contagious pre-asymptomatic)
+  rES = 1, # Ratio of excretion for individuals in epidemiological stage ES (exposed - contagious pre-symptomatic)
+  rIA = 0.35,# Ratio of excretion for individuals in epidemiological stage IA (infectious asymptomatic)
+  rIM = 1, # Ratio of excretion for individuals in epidemiological stage IM (infectious with mild symptoms)
+  rIS = 1, # Ratio of excretion for individuals in epidemiological stage IS (infectious with severe symptoms)
+
   ptestPSAsymp = 1, # probability to test symptomatic patients in the screening area
   ptestPSANI = .75,  # probability to test NI patients in the screening area
   ptestPSALI = 0.50, # probability to test PI patients in the screening area

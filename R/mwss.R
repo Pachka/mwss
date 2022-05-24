@@ -77,7 +77,7 @@ mwss <- function(ward_names,
 
   v0 <- build_v0(u0, SA)
 
-  pts_fun <- build_pts_fun(u0, SA, gdata[["pISO"]], v0)
+  pts_fun <- build_pts_fun(u0, SA, v0, gdata)
 
   transitions <- build_transitions(SA)
 

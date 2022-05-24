@@ -36,12 +36,18 @@ build_transitions <- function(SA){
 
   infPSA <-
     paste0("(",
-           paste(
-             c(sapply(
-               paste("PSA", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
-                 paste(pref, c("NI", "LI", "HI"), sep = "_")
-             )),
-             collapse = " + "),
+           paste(paste(c(
+             sapply(paste("PSA", c(
+               "EA", "ES", "IA", "IM", "IS"
+             ), sep = "_"), function(pref)
+               paste(pref, c("NI", "LI", "HI"), sep = "_"))
+           ), paste(
+             "r", c(sapply(c("EA", "ES", "IA", "IM", "IS"), function(epi)
+               rep(epi, 3))),
+             sep = ""
+           ),
+           sep = " * "),
+           collapse = " + "),
            ")")
   nPW <-
     "(PW_S_NI + PW_S_NI_T + PW_S_LI + PW_S_LI_T + PW_S_HI + PW_S_HI_T + PW_E_NI + PW_E_NI_T + PW_E_LI + PW_E_LI_T + PW_E_HI + PW_E_HI_T + PW_EA_NI + PW_EA_NI_T + PW_EA_LI + PW_EA_LI_T + PW_EA_HI + PW_EA_HI_T + PW_ES_NI + PW_ES_NI_T + PW_ES_LI + PW_ES_LI_T + PW_ES_HI + PW_ES_HI_T + PW_IA_NI + PW_IA_NI_T + PW_IA_LI + PW_IA_LI_T + PW_IA_HI + PW_IA_HI_T + PW_IM_NI + PW_IM_NI_T + PW_IM_LI + PW_IM_LI_T + PW_IM_HI + PW_IM_HI_T + PW_IS_NI + PW_IS_NI_T + PW_IS_LI + PW_IS_LI_T + PW_IS_HI + PW_IS_HI_T)"
@@ -68,28 +74,63 @@ build_transitions <- function(SA){
 
   infPW <-
     paste0("((",
-           paste(
-             c(sapply(
-               paste("PW", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
-                 paste(pref, c("NI", "LI", "HI"), sep = "_")
-             )),
-             collapse = " + "),
+           paste(paste(c(
+             sapply(paste("PW", c(
+               "EA", "ES", "IA", "IM", "IS"
+             ), sep = "_"), function(pref)
+               paste(pref, c("NI", "LI", "HI"), sep = "_"))
+           ), paste(
+             "r", c(sapply(c("EA", "ES", "IA", "IM", "IS"), function(epi)
+               rep(epi, 3))),
+             sep = ""
+           ),
+           sep = " * "),
+           collapse = " + "),
            ") + pISO * (",
-           paste(
-             c(sapply(
-               c(sapply(
-                 paste("PW", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
-                   paste(pref, c("NI", "LI", "HI"), sep = "_")
-               )), function(pref)
-                 paste(pref, "T", sep = "_")
-             )),
-             collapse = " + "),
+           paste(paste(c(
+             sapply(c(sapply(paste("PW", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
+               paste(pref, c("NI", "LI", "HI"), sep = "_"))), function(pref)
+                 paste(pref, "T", sep = "_"))
+           ), paste(
+             "r", c(sapply(c("EA", "ES", "IA", "IM", "IS"), function(epi)
+               rep(epi, 3))),
+             sep = ""
+           ),
+           sep = " * "),
+           collapse = " + "),
            "))")
+
 
   nH <-
     "(H_S_NI + H_S_NI_T + H_S_LI + H_S_LI_T + H_S_HI + H_S_HI_T + H_E_NI + H_E_NI_T + H_E_LI + H_E_LI_T + H_E_HI + H_E_HI_T + H_EA_NI + H_EA_NI_T + H_EA_LI + H_EA_LI_T + H_EA_HI + H_EA_HI_T + H_ES_NI + H_ES_NI_T + H_ES_LI + H_ES_LI_T + H_ES_HI + H_ES_HI_T + H_IA_NI + H_IA_NI_T + H_IA_LI + H_IA_LI_T + H_IA_HI + H_IA_HI_T + H_IM_NI + H_IM_NI_T + H_IM_LI + H_IM_LI_T + H_IM_HI + H_IM_HI_T + H_IS_NI + H_IS_NI_T + H_IS_LI + H_IS_LI_T + H_IS_HI + H_IS_HI_T)"
+
   infH <-
-    "(H_EA_NI + H_EA_NI_T + H_EA_LI + H_EA_LI_T + H_EA_HI + H_EA_HI_T + H_ES_NI + H_ES_NI_T + H_ES_LI + H_ES_LI_T + H_ES_HI + H_ES_HI_T + H_IA_NI + H_IA_NI_T + H_IA_LI + H_IA_LI_T + H_IA_HI + H_IA_HI_T + H_IM_NI + H_IM_NI_T + H_IM_LI + H_IM_LI_T + H_IM_HI + H_IM_HI_T + H_IS_NI + H_IS_NI_T + H_IS_LI + H_IS_LI_T + H_IS_HI + H_IS_HI_T)"
+    paste0("(",
+           paste(paste(c(
+             sapply(paste("H", c(
+               "EA", "ES", "IA", "IM", "IS"
+             ), sep = "_"), function(pref)
+               paste(pref, c("NI", "LI", "HI"), sep = "_"))
+           ), paste(
+             "r", c(sapply(c("EA", "ES", "IA", "IM", "IS"), function(epi)
+               rep(epi, 3))),
+             sep = ""
+           ),
+           sep = " * "),
+           collapse = " + "),
+           " + ",
+           paste(paste(c(
+             sapply(c(sapply(paste("H", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
+               paste(pref, c("NI", "LI", "HI"), sep = "_"))), function(pref)
+                 paste(pref, "T", sep = "_"))
+           ), paste(
+             "r", c(sapply(c("EA", "ES", "IA", "IM", "IS"), function(epi)
+               rep(epi, 3))),
+             sep = ""
+           ),
+           sep = " * "),
+           collapse = " + "),
+           ")")
 
   ## Conditions to activate transitions
   # Is there any available bed?
@@ -122,9 +163,9 @@ build_transitions <- function(SA){
   # Infection of patients in the ward
   lambdaPW <-
     paste("pconta * (", # probability of transmission for one day of contact *
-          "(1 - epsPPW) * ctcPPW * (", infPW, "/", nPWctc,  #  1-infection control ratio * proportion of one day in contacts with patients * proportion of infected patients in the given ward
-          ") + (1 - epsHPW) * ctcHPW * wpropInfHorig +", #  1-infection control ratio * proportion of one day in contacts with professionals *  proportion of infected professionals working in the given ward
-          "(1 - epsVPW) * ctcV * nV * (prev * (1-rE)))") #  1-infection control ratio * average daily duration of contact with visitors * daily number of visitor per patients * proportion of infectious in the community (prevalence minus non infectious exposed)
+          "(1 - epsPPW) * ctcPPW * (", infPW, "/", nPWctc,#  1-infection control ratio * proportion of one day in contacts with patients * proportion of infected patients in the given ward
+          ") + (1 - epsHPW) * ctcHPW * wpropInfHorig +",  #  1-infection control ratio * proportion of one day in contacts with professionals *  proportion of infected professionals working in the given ward
+          "(1 - epsVPW) * ctcV * nV * (prev * (1-rtE)))") #  1-infection control ratio * average daily duration of contact with visitors * daily number of visitor per patients * proportion of infectious in the community (prevalence minus non infectious exposed)
 
   transitions <-
     ## Patients
@@ -500,49 +541,49 @@ build_transitions <- function(SA){
                          ### New patient (if there is an available bed)
                          ## Non Immune
                          # Susceptible
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) * (1 - prev) : 0 -> PSA_S_NI + nadm"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) * (1 - prev) : 0 -> PSA_S_NI + adm"),
                          # Exposed
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rE : 0 -> PSA_E_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtE : 0 -> PSA_E_NI + adm + admE"),
                          # Exposed infectious future asymptomatic
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rEA : 0 -> PSA_EA_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtEA : 0 -> PSA_EA_NI + adm + admEA"),
                          # Exposed infectious future symptomatic
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rES : 0 -> PSA_ES_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtES : 0 -> PSA_ES_NI + adm + admES"),
                          # Infectious asymptomatic
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIA : 0 -> PSA_IA_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIA : 0 -> PSA_IA_NI + adm + admIA"),
                          # Infectious with mild symptoms
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIM : 0 -> PSA_IM_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIM : 0 -> PSA_IM_NI + adm + admIM"),
                          # Infectious with severe symptoms
-                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIS : 0 -> PSA_IS_NI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIS : 0 -> PSA_IS_NI + adm + admIS"),
                          ## Partially Immune
                          # Susceptible
-                         paste("@ ->", SPACE ,"? pLI * (1 - prev) : 0 -> PSA_S_LI + nadm"),
+                         paste("@ ->", SPACE ,"? pLI * (1 - prev) : 0 -> PSA_S_LI + adm"),
                          # Exposed
-                         paste("@ ->", SPACE ,"? pLI *  prev * rE : 0 -> PSA_E_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtE : 0 -> PSA_E_LI + adm + admE"),
                          # Exposed infectious future asymptomatic
-                         paste("@ ->", SPACE ,"? pLI *  prev * rEA : 0 -> PSA_EA_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtEA : 0 -> PSA_EA_LI + adm + admEA"),
                          # Exposed infectious future symptomatic
-                         paste("@ ->", SPACE ,"? pLI *  prev * rES : 0 -> PSA_ES_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtES : 0 -> PSA_ES_LI + adm + admES"),
                          # Infectious asymptomatic
-                         paste("@ ->", SPACE ,"? pLI *  prev * rIA : 0 -> PSA_IA_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtIA : 0 -> PSA_IA_LI + adm + admIA"),
                          # Infectious with mild symptoms
-                         paste("@ ->", SPACE ,"? pLI *  prev * rIM : 0 -> PSA_IM_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtIM : 0 -> PSA_IM_LI + adm + admIM"),
                          # Infectious with severe symptoms
-                         paste("@ ->", SPACE ,"? pLI *  prev * rIS : 0 -> PSA_IS_LI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pLI *  prev * rtIS : 0 -> PSA_IS_LI + adm + admIS"),
                          ## Fully Immune
                          # Susceptible
-                         paste("@ ->", SPACE ,"? pHI * (1 - prev) : 0 -> PSA_S_HI + nadm"),
+                         paste("@ ->", SPACE ,"? pHI * (1 - prev) : 0 -> PSA_S_HI + adm"),
                          # Exposed
-                         paste("@ ->", SPACE ,"? pHI *  prev * rE : 0 -> PSA_E_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtE : 0 -> PSA_E_HI + adm + admE"),
                          # Exposed infectious future asymptomatic
-                         paste("@ ->", SPACE ,"? pHI *  prev * rEA : 0 -> PSA_EA_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtEA : 0 -> PSA_EA_HI + adm + admEA"),
                          # Exposed infectious future symptomatic
-                         paste("@ ->", SPACE ,"? pHI *  prev * rES : 0 -> PSA_ES_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtES : 0 -> PSA_ES_HI + adm + admES"),
                          # Infectious asymptomatic
-                         paste("@ ->", SPACE ,"? pHI *  prev * rIA : 0 -> PSA_IA_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtIA : 0 -> PSA_IA_HI + adm + admIA"),
                          # Infectious with mild symptoms
-                         paste("@ ->", SPACE ,"? pHI *  prev * rIM : 0 -> PSA_IM_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtIM : 0 -> PSA_IM_HI + adm + admIM"),
                          # Infectious with severe symptoms
-                         paste("@ ->", SPACE ,"? pHI *  prev * rIS : 0 -> PSA_IS_HI + nadm + admInf"),
+                         paste("@ ->", SPACE ,"? pHI *  prev * rtIS : 0 -> PSA_IS_HI + adm + admIS"),
                          # Admission
                          ####
                          ### Test
@@ -687,49 +728,49 @@ build_transitions <- function(SA){
                            ### New patient (if there is an available bed)
                            ## Non Immune
                            # Susceptible
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) * (1 - prev) : 0 -> PW_S_NI + nadm"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) * (1 - prev) : 0 -> PW_S_NI + adm"),
                            # Exposed
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rE : 0 -> PW_E_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtE : 0 -> PW_E_NI + adm + admE"),
                            # Exposed infectious future asymptomatic
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rEA : 0 -> PW_EA_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtEA : 0 -> PW_EA_NI + adm + admEA"),
                            # Exposed infectious future symptomatic
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rES : 0 -> PW_ES_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtES : 0 -> PW_ES_NI + adm + admES"),
                            # Infectious asymptomatic
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIA : 0 -> PW_IA_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIA : 0 -> PW_IA_NI + adm + admIA"),
                            # Infectious with mild symptoms
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIM : 0 -> PW_IM_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIM : 0 -> PW_IM_NI + adm + admIM"),
                            # Infectious with severe symptoms
-                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rIS : 0 -> PW_IS_NI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? (1 - pLI - pHI) *  prev * rtIS : 0 -> PW_IS_NI + adm + admIS"),
                            ## Partially Immune
                            # Susceptible
-                           paste("@ ->", SPACE ,"? pLI * (1 - prev) : 0 -> PW_S_LI + nadm"),
+                           paste("@ ->", SPACE ,"? pLI * (1 - prev) : 0 -> PW_S_LI + adm"),
                            # Exposed
-                           paste("@ ->", SPACE ,"? pLI *  prev * rE : 0 -> PW_E_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtE : 0 -> PW_E_LI + adm + admE"),
                            # Exposed infectious future asymptomatic
-                           paste("@ ->", SPACE ,"? pLI *  prev * rEA : 0 -> PW_EA_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtEA : 0 -> PW_EA_LI + adm + admEA"),
                            # Exposed infectious future symptomatic
-                           paste("@ ->", SPACE ,"? pLI *  prev * rES : 0 -> PW_ES_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtES : 0 -> PW_ES_LI + adm + admES"),
                            # Infectious asymptomatic
-                           paste("@ ->", SPACE ,"? pLI *  prev * rIA : 0 -> PW_IA_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtIA : 0 -> PW_IA_LI + adm + admIA"),
                            # Infectious with mild symptoms
-                           paste("@ ->", SPACE ,"? pLI *  prev * rIM : 0 -> PW_IM_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtIM : 0 -> PW_IM_LI + adm + admIM"),
                            # Infectious with severe symptoms
-                           paste("@ ->", SPACE ,"? pLI *  prev * rIS : 0 -> PW_IS_LI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pLI *  prev * rtIS : 0 -> PW_IS_LI + adm + admIS"),
                            ## Fully Immune
                            # Susceptible
-                           paste("@ ->", SPACE ,"? pHI * (1 - prev) : 0 -> PW_S_HI + nadm"),
+                           paste("@ ->", SPACE ,"? pHI * (1 - prev) : 0 -> PW_S_HI + adm"),
                            # Exposed
-                           paste("@ ->", SPACE ,"? pHI *  prev * rE : 0 -> PW_E_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtE : 0 -> PW_E_HI + adm + admE"),
                            # Exposed infectious future asymptomatic
-                           paste("@ ->", SPACE ,"? pHI *  prev * rEA : 0 -> PW_EA_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtEA : 0 -> PW_EA_HI + adm + admEA"),
                            # Exposed infectious future symptomatic
-                           paste("@ ->", SPACE ,"? pHI *  prev * rES : 0 -> PW_ES_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtES : 0 -> PW_ES_HI + adm + admES"),
                            # Infectious asymptomatic
-                           paste("@ ->", SPACE ,"? pHI *  prev * rIA : 0 -> PW_IA_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtIA : 0 -> PW_IA_HI + adm + admIA"),
                            # Infectious with mild symptoms
-                           paste("@ ->", SPACE ,"? pHI *  prev * rIM : 0 -> PW_IM_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtIM : 0 -> PW_IM_HI + adm + admIM"),
                            # Infectious with severe symptoms
-                           paste("@ ->", SPACE ,"? pHI *  prev * rIS : 0 -> PW_IS_HI + nadm + admInf"),
+                           paste("@ ->", SPACE ,"? pHI *  prev * rtIS : 0 -> PW_IS_HI + adm + admIS"),
                            ##########
                            ####### Professionals
                            ##########

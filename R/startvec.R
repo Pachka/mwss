@@ -222,8 +222,13 @@ startvec <- function(ward_names,
       "incHA",
       "incHM",
       "incHS",
-      "nadm" ,
-      "admInf"
+      "adm",
+      "admE",
+      "admEA",
+      "admES",
+      "admIA",
+      "admIM",
+      "admIS"
     )
   )
 
