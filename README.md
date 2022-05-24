@@ -1,3 +1,5 @@
+--- Package under development ---
+
 ## mwss: an R package for stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 <font size="-2">
@@ -38,7 +40,7 @@ install_github("MESuRS-Lab/mwss")
 ````
 The companion RShiny application providing user-friendly interface to run simulations can be loaded directly from the GitHub repository (https://github.com/MESuRS-Lab/mwss-App) using 'shiny' library:
 ````
-library(shiny)
+library(shiny) # use version >= 1.7.1
 runGitHub("MESuRS-Lab/mwss-App")
 ````
 
