@@ -1,3 +1,5 @@
+--- Package under development ---
+
 ## mwss: an R package for stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 <font size="-2">
