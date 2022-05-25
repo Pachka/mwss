@@ -247,11 +247,11 @@ build_transitions <- function(SA){
       ### Infection
       # pinfWp
       paste("PW_S_NI -> ", PWEMPTY,"? 0 : PW_S_NI * ", lambdaPW ," -> PW_E_NI + infP"),
-      paste("PW_S_NI_T -> ", PWEMPTY,"? 0 : PW_S_NI_T * ", lambdaPW ," -> PW_E_NI_T + infP"),
+      paste("PW_S_NI_T -> ", PWEMPTY,"? 0 : PW_S_NI_T * (1 - pISO) *", lambdaPW ," -> PW_E_NI_T + infP"),
       paste("PW_S_LI -> ", PWEMPTY,"? 0 : PW_S_LI * ", lambdaPW ," * rinfLI -> PW_E_LI + infP"),
-      paste("PW_S_LI_T -> ", PWEMPTY,"? 0 : PW_S_LI_T * ", lambdaPW ," * rinfLI -> PW_E_LI_T + infP"),
+      paste("PW_S_LI_T -> ", PWEMPTY,"? 0 : PW_S_LI_T * (1 - pISO) *", lambdaPW ," * rinfLI -> PW_E_LI_T + infP"),
       paste("PW_S_HI -> ", PWEMPTY,"? 0 : PW_S_HI * ", lambdaPW ," * rinfHI -> PW_E_HI + infP"),
-      paste("PW_S_HI_T -> ", PWEMPTY,"? 0 : PW_S_HI_T * ", lambdaPW ," * rinfHI -> PW_E_HI_T + infP"),
+      paste("PW_S_HI_T -> ", PWEMPTY,"? 0 : PW_S_HI_T * (1 - pISO) *", lambdaPW ," * rinfHI -> PW_E_HI_T + infP"),
       ### Disease cycle
       # NI
       "PW_E_NI -> PW_E_NI * ( 1 / tE) * (1 - psympNI) -> PW_EA_NI",
