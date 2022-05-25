@@ -50,7 +50,23 @@ build_transitions <- function(SA){
            collapse = " + "),
            ")")
   nPW <-
-    "(PW_S_NI + PW_S_NI_T + PW_S_LI + PW_S_LI_T + PW_S_HI + PW_S_HI_T + PW_E_NI + PW_E_NI_T + PW_E_LI + PW_E_LI_T + PW_E_HI + PW_E_HI_T + PW_EA_NI + PW_EA_NI_T + PW_EA_LI + PW_EA_LI_T + PW_EA_HI + PW_EA_HI_T + PW_ES_NI + PW_ES_NI_T + PW_ES_LI + PW_ES_LI_T + PW_ES_HI + PW_ES_HI_T + PW_IA_NI + PW_IA_NI_T + PW_IA_LI + PW_IA_LI_T + PW_IA_HI + PW_IA_HI_T + PW_IM_NI + PW_IM_NI_T + PW_IM_LI + PW_IM_LI_T + PW_IM_HI + PW_IM_HI_T + PW_IS_NI + PW_IS_NI_T + PW_IS_LI + PW_IS_LI_T + PW_IS_HI + PW_IS_HI_T)"
+    paste0("(",
+           paste(
+             c(sapply(
+               paste("PW", c("S", "E", "EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
+                 paste(pref, c("NI", "LI", "HI"), sep = "_")
+             )),
+             collapse = " + ")," + ",
+           paste(
+             c(sapply(
+               c(sapply(
+                 paste("PW", c("S", "E", "EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
+                   paste(pref, c("NI", "LI", "HI"), sep = "_")
+               )), function(pref)
+                 paste(pref, "T", sep = "_")
+             )),
+             collapse = " + "),
+           ")")
 
   nPWctc <-
     paste0("((",
@@ -60,7 +76,7 @@ build_transitions <- function(SA){
                  paste(pref, c("NI", "LI", "HI"), sep = "_")
              )),
              collapse = " + "),
-           ") + pISO * (",
+           ") + (1 - pISO) * (",
            paste(
              c(sapply(
                c(sapply(
@@ -86,7 +102,7 @@ build_transitions <- function(SA){
            ),
            sep = " * "),
            collapse = " + "),
-           ") + pISO * (",
+           ") + (1 - pISO) * (",
            paste(paste(c(
              sapply(c(sapply(paste("PW", c("EA", "ES", "IA", "IM", "IS"), sep = "_"), function(pref)
                paste(pref, c("NI", "LI", "HI"), sep = "_"))), function(pref)
@@ -224,6 +240,10 @@ build_transitions <- function(SA){
       "PW_IA_HI -> PW_IA_HI * ptestPWHI * ( 1 /  (tbtwtestP + ttestPW)) * senW -> PW_IA_HI_T + nTestP",
       "PW_IM_HI -> PW_IM_HI * ptestPWsymp * ( 1 / (tbeftestPsymp + ttestsymp)) * sensymp -> PW_IM_HI_T + nTestP",
       "PW_IS_HI -> PW_IS_HI * ptestPWsymp * ( 1 / (tbeftestPsymp + ttestsymp)) * sensymp -> PW_IS_HI_T + nTestP",
+      ### susceptible with false positive test return to untested
+      "PW_S_NI_T -> PW_S_NI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_NI",
+      "PW_S_LI_T -> PW_S_LI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_LI",
+      "PW_S_HI_T -> PW_S_HI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_HI",
       ### Infection
       # pinfWp
       paste("PW_S_NI -> ", PWEMPTY,"? 0 : PW_S_NI * ", lambdaPW ," -> PW_E_NI + infP"),
@@ -297,7 +317,6 @@ build_transitions <- function(SA){
       "PW_S_LI_T -> PW_S_LI_T * (1 / tLI) -> PW_S_NI_T",
       ### Immunity gain
       "PW_S_NI -> PW_S_NI * hNI2LI -> PW_S_LI",
-      "PW_S_NI_T -> PW_S_NI_T * hNI2LI -> PW_S_LI_T",
       "PW_S_LI -> PW_S_LI * hLI2HI -> PW_S_HI",
       "PW_S_LI_T -> PW_S_LI_T * hLI2HI -> PW_S_HI_T",
       ### Exit
@@ -365,9 +384,11 @@ build_transitions <- function(SA){
       "H_S_LI_T -> H_S_LI_T * (1 / tLI) -> H_S_NI_T",
       ### Immunity gain
       "H_S_NI -> H_S_NI * hNI2LI -> H_S_LI",
-      "H_S_NI_T -> H_S_NI_T * hNI2LI -> H_S_LI_T",
       "H_S_LI -> H_S_LI * hLI2HI -> H_S_HI",
-      "H_S_LI_T -> H_S_LI_T * hLI2HI -> H_S_HI_T",
+      ### susceptible with false positive test return to untested
+      "H_S_NI_T -> H_S_NI_T * 1 / (prev/hinc/(1-prev)) -> H_S_NI",
+      "H_S_LI_T -> H_S_LI_T * 1 / (prev/hinc/(1-prev)) -> H_S_LI",
+      "H_S_HI_T -> H_S_HI_T * 1 / (prev/hinc/(1-prev)) -> H_S_HI",
       #  infection in community
       paste("H_S_NI -> H_S_NI * hinc * ptow -> H_E_NI + infHout"),
       paste("H_S_NI_T -> H_S_NI_T * hinc * ptow -> H_E_NI_T + infHout"),

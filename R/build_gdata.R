@@ -80,7 +80,7 @@
 #' @param psevNI a positive probability, the conditional probability to develop severe symptoms when symptomatic and non immune
 #' @param psevLI a positive probability, the conditional probability to develop severe symptoms when symptomatic and despite a low immunity
 #' @param psevHI a positive probability, the conditional probability to develop severe symptoms when symptomatic and despite a high immunity
-#' @param pISO logical, triggers the implementation of contact restrictions (confinement/quarantine/isolation) in case of positive test
+#' @param pISO probability, level of contact restrictions (confinement/quarantine/isolation) in case of positive test
 #' @param pSL a positive probability, the probability for professional with mild symptoms of taking sick leave
 #' @param pESL a positive probability, the probability for professional with severe symptoms  of taking extended sick leave
 #' @param pSLT positive probability, the additional probability for professionals of taking sick leave after positive test
@@ -214,7 +214,7 @@ build_gdata <- function(##### Infection
   psevHI = 0.1,
   # probability to develop severe symptoms when fully immune
 
-  pISO = TRUE,
+  pISO = 1,
   # contact restriction in case of positive test
 
   pSL = 0.3,
@@ -447,10 +447,10 @@ build_gdata <- function(##### Infection
 
   ## Contact restriction
 
-  if (!is.logical(pISO))
-    stop(
-      "pISO must be logical. TRUE: patients are isolated and contacts are restricted in case of a positive test, FALSE: contact are not restricted but test is counted."
-    )
+  # if (!is.logical(pISO))
+  #   stop(
+  #     "pISO must be logical. TRUE: patients are isolated and contacts are restricted in case of a positive test, FALSE: contact are not restricted but test is counted."
+  #   )
 
   ## Intensive care
   if (pIC < 0 | pIC > 1 | pdieIC < 0 | pdieIC > 1)

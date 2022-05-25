@@ -36,7 +36,7 @@ multisim <- function(model, nSim, ward_names){
 
 
   class(trajmwss) <- c("mwss")
-  if(model@gdata[["pISO"]] == 1) class(trajmwss) %<>% c(., "ISO")
+  if(model@gdata[["pISO"]] > 0) class(trajmwss) %<>% c(., "ISO")
   if(TRUE %in% (model@u0 %>% rownames %>% grepl("PSA",.))) class(trajmwss) %<>% c(., "SA")
   if(sum(model@gdata[c("ptestPWNI","ptestPWLI","ptestPWHI")]) > 0) class(trajmwss) %<>% c(., "ScreenP")
   if(sum(model@gdata[c("ptestHNI","ptestHLI","ptestHHI")]) > 0) class(trajmwss) %<>% c(., "ScreenH")

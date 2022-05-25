@@ -109,7 +109,7 @@ gdata <- build_gdata(
   psevLI = 0.3, # probability to develop severe symptoms when partially immune
   psevHI = 0.1, # probability to develop severe symptoms when fully immune
 
-  pISO = TRUE, # probability to be isolated if confirmed
+  pISO = 1, # probability, level of contact restriction if confirmed case
 
   pSL = 0.3, # probability to take sick leave
   pESL = 1, # probability to take extended sick leave
@@ -162,6 +162,15 @@ gdata <- build_gdata(
 )
 
 plot_connectivity(matContact, pop_size_P, verbose = FALSE)
+
+# initial vector
+
+u0 <- startvec(ward_names,
+              pop_size_P,
+              pop_size_H,
+              nVisits,
+              LS,
+              matContact = matContact)$u0
 
 # with screening area
 

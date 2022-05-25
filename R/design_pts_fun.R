@@ -12,7 +12,6 @@
 
 build_pts_fun <- function(u0, SA, v0, gdata){
 
-  pISO <- gdata[["pISO"]]
   nwards <- nrow(u0)
   nCpmt <- ncol(u0)
   nvvar <- ncol(v0)
@@ -34,45 +33,39 @@ build_pts_fun <- function(u0, SA, v0, gdata){
   }
 
   # infected patients contributing to spread
-  if(isTRUE(pISO)){
     infMWp  =
-      paste(
+      paste0(
         paste0("rEA * u_0[",which(
           grepl("PW_", colnames(u0)) & grepl("_EA_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
         ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rES * u_0[",which(
           grepl("PW_", colnames(u0)) & grepl("_ES_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
-        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIA * u_0[",which(
           grepl("PW_", colnames(u0)) & grepl("_IA_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
-        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIM * u_0[",which(
           grepl("PW_", colnames(u0)) & grepl("_IM_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
-        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "),
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIS * u_0[",which(
           grepl("PW_", colnames(u0)) & grepl("_IS_", colnames(u0)) & ! endsWith(colnames(u0), "_T")
-        ) %>% subtract(1), "+i*nCpmt]", collapse = " + ")
-      )
-  } else {
-    infMWp  =
-      paste(
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + (1 - pISO) * (",
         paste0("rEA * u_0[",which(
-          grepl("PW_", colnames(u0)) & grepl("_EA_", colnames(u0))
+          grepl("PW_", colnames(u0)) & grepl("_EA_", colnames(u0)) & endsWith(colnames(u0), "_T")
         ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rES * u_0[",which(
-          grepl("PW_", colnames(u0)) & grepl("_ES_", colnames(u0))
+          grepl("PW_", colnames(u0)) & grepl("_ES_", colnames(u0)) & endsWith(colnames(u0), "_T")
         ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIA * u_0[",which(
-          grepl("PW_", colnames(u0)) & grepl("_IA_", colnames(u0))
+          grepl("PW_", colnames(u0)) & grepl("_IA_", colnames(u0)) & endsWith(colnames(u0), "_T")
         ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIM * u_0[",which(
-          grepl("PW_", colnames(u0)) & grepl("_IM_", colnames(u0))
+          grepl("PW_", colnames(u0)) & grepl("_IM_", colnames(u0)) & endsWith(colnames(u0), "_T")
         ) %>% subtract(1), "+i*nCpmt]", collapse = " + "), " + ",
         paste0("rIS * u_0[",which(
-          grepl("PW_", colnames(u0)) & grepl("_IS_", colnames(u0))
-        ) %>% subtract(1), "+i*nCpmt]", collapse = " + ")
+          grepl("PW_", colnames(u0)) & grepl("_IS_", colnames(u0)) & endsWith(colnames(u0), "_T")
+        ) %>% subtract(1), "+i*nCpmt]", collapse = " + ")," )"
       )
-  }
 
   # infected healthcare workers contributing to spread
   infMWh  =
@@ -95,13 +88,12 @@ build_pts_fun <- function(u0, SA, v0, gdata){
     )
 
   # Total number of non isolated patients
-  if(isTRUE(pISO)){
-  totMWp  = paste0("u_0[",which(grepl("PW_", colnames(u0))&
-                                 ! endsWith(colnames(u0), "_T")) %>% subtract(1), "+i*nCpmt]", collapse = "+")
-  } else {
-    totMWp  = paste0("u_0[",grep("PW_", colnames(u0)) %>% subtract(1), "+i*nCpmt]", collapse = "+")
-  }
-
+  totMWp  =
+    paste("(",
+    paste0("u_0[",which(grepl("PW_", colnames(u0))&
+                                 ! endsWith(colnames(u0), "_T")) %>% subtract(1), "+i*nCpmt]", collapse = "+"),
+  "+ (1 - pISO) * (",
+  paste0("u_0[",which(grepl("PW_", colnames(u0))& endsWith(colnames(u0), "_T")) %>% subtract(1), "+i*nCpmt]", collapse = "+"), "))")
   # Total number of healthcare workers
   totMWh  = paste0("u_0[",grep("H_", colnames(u0)) %>% subtract(1), "+i*nCpmt]", collapse = "+")
 
@@ -115,6 +107,7 @@ const int rES = (int)",gdata[["rES"]], "L;
 const int rIA = (int)",gdata[["rIA"]], "L;
 const int rIM = (int)",gdata[["rIM"]], "L;
 const int rIS = (int)",gdata[["rIS"]], "L;
+const int pISO = (int)",as.numeric(gdata[["pISO"]]), "L;
 const int npropinf = (int) 3L;
 unsigned int i = 0;
 double infMPSA, infMWp, infMWh, totMPSA, totMWp, totMWh, wpropInfHorig, wpropInfHdest, wpropInfPSAdest, wpropInfPWdest = 0.00;
@@ -188,6 +181,7 @@ const int rES = (int)",gdata[["rES"]], "L;
 const int rIA = (int)",gdata[["rIA"]], "L;
 const int rIM = (int)",gdata[["rIM"]], "L;
 const int rIS = (int)",gdata[["rIS"]], "L;
+const int pISO = (int)",as.numeric(gdata[["pISO"]]), "L;
 const int npropinf = (int) 2L;
 unsigned int i = 0;
 double infMWp, infMWh, totMWp, totMWh, wpropInfHorig, wpropInfHdest, wpropInfPWdest = 0.00;
