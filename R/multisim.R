@@ -10,7 +10,7 @@
 #' @param nSim Number of simulations
 #' @param ward_names String vector with ward names/id in the same order than the one used in the function \code{mwss} to build the model
 #'
-#' @return List of data.table of class 'mwss'. Additional ISO and SA classes are added depending on the surveillance measures implemented in the model.
+#' @return List of data.table of class 'mwss'. Additional ISO, SA,ScreenP, ScreenH, TestSympP and TestSympH classes are added depending on the prevention, surveillance and control measures implemented in the model.
 #'
 #' @importFrom SimInf run
 #' @importFrom SimInf trajectory
@@ -38,6 +38,10 @@ multisim <- function(model, nSim, ward_names){
   class(trajmwss) <- c("mwss")
   if(model@gdata[["pISO"]] == 1) class(trajmwss) %<>% c(., "ISO")
   if(TRUE %in% (model@u0 %>% rownames %>% grepl("PSA",.))) class(trajmwss) %<>% c(., "SA")
+  if(sum(model@gdata[c("ptestPWNI","ptestPWLI","ptestPWHI")]) > 0) class(trajmwss) %<>% c(., "ScreenP")
+  if(sum(model@gdata[c("ptestHNI","ptestHLI","ptestHHI")]) > 0) class(trajmwss) %<>% c(., "ScreenH")
+  if(model@gdata[c("ptestPWsymp")] > 0) class(trajmwss) %<>% c(., "TestSympP")
+  if(model@gdata[c("ptestHsymp")] > 0) class(trajmwss) %<>% c(., "TestSympH")
 
   return(trajmwss)
   }
