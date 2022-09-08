@@ -241,9 +241,9 @@ build_transitions <- function(SA){
       "PW_IM_HI -> PW_IM_HI * ptestPWsymp * ( 1 / (tbeftestPsymp + ttestsymp)) * sensymp -> PW_IM_HI_T + nTestP",
       "PW_IS_HI -> PW_IS_HI * ptestPWsymp * ( 1 / (tbeftestPsymp + ttestsymp)) * sensymp -> PW_IS_HI_T + nTestP",
       ### susceptible with false positive test return to untested
-      "PW_S_NI_T -> PW_S_NI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_NI",
-      "PW_S_LI_T -> PW_S_LI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_LI",
-      "PW_S_HI_T -> PW_S_HI_T * 1 / (prev/hinc/(1-prev)) -> PW_S_HI",
+      "PW_S_NI_T -> PW_S_NI_T * 1 / td -> PW_S_NI",
+      "PW_S_LI_T -> PW_S_LI_T * 1 / td -> PW_S_LI",
+      "PW_S_HI_T -> PW_S_HI_T * 1 / td -> PW_S_HI",
       ### Infection
       # pinfWp
       paste("PW_S_NI -> ", PWEMPTY,"? 0 : PW_S_NI * ", lambdaPW ," -> PW_E_NI + infP"),
@@ -386,9 +386,9 @@ build_transitions <- function(SA){
       "H_S_NI -> H_S_NI * hNI2LI -> H_S_LI",
       "H_S_LI -> H_S_LI * hLI2HI -> H_S_HI",
       ### susceptible with false positive test return to untested
-      "H_S_NI_T -> H_S_NI_T * 1 / (prev/hinc/(1-prev)) -> H_S_NI",
-      "H_S_LI_T -> H_S_LI_T * 1 / (prev/hinc/(1-prev)) -> H_S_LI",
-      "H_S_HI_T -> H_S_HI_T * 1 / (prev/hinc/(1-prev)) -> H_S_HI",
+      "H_S_NI_T -> H_S_NI_T * 1 / td -> H_S_NI",
+      "H_S_LI_T -> H_S_LI_T * 1 / td -> H_S_LI",
+      "H_S_HI_T -> H_S_HI_T * 1 / td -> H_S_HI",
       #  infection in community
       paste("H_S_NI -> H_S_NI * hinc * ptow -> H_E_NI + infHout"),
       paste("H_S_NI_T -> H_S_NI_T * hinc * ptow -> H_E_NI_T + infHout"),

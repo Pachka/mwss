@@ -524,6 +524,9 @@ build_gdata <- function(##### Infection
     tHI = tHI,
     # duration of full immunity before return to partial immune status
 
+    td = d,
+    # disease duration
+
     ## Contacts
     ctcHPSA = n_ctcH_PSA  * t_ctcH_PSA,
     ctcPPSA = n_ctcP_PSA  * t_ctcP_PSA,
