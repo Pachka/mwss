@@ -327,6 +327,16 @@ build_gdata <- function(##### Infection
         "Epidemiological stages and immunity durations must be positive numbers."
       ))
 
+    if (d <= 0)
+      stop(
+        "Epidemiological stages and immunity durations must be positive numbers."
+      )
+
+    if (d > sum(tE, tEA, tES, tIA, tIM, tIS))
+      stop(
+        "Total disease duration (d) must be inferior or equal to the sum of durations of all epidemiological stages (tE, tEA, tES, tIA, tIM, tIS)."
+      )
+
   sapply(c(rinfLI, rinfHI), function(x)
     if (x <= 0)
       stop(
