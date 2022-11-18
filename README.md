@@ -64,5 +64,7 @@ mwss
 - **Data**
 <br> This folder contains the toydataset to run the examples documented for each exported function.
 
-
+## Further actions
+- sensitivity analysis
+- publications
 
